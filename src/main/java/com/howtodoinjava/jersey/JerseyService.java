@@ -66,14 +66,19 @@ public class JerseyService
 	@GET
 	@Path("/get")
 	@Produces("text/plain")
-	public Response getFile() {
+	public Response getFile(@QueryParam("filePath") String filePath, @QueryParam("fileName") String fileName) {
 
-		String FILEPATH = "c:\\temp\\somefile.txt";
-		File file = new File(FILEPATH);
+		//String FILEPATH = "c:\\temp\\somefile.txt";
+		File file = new File(filePath);
 
+		syso("File Path received is : " + filePath);
+		
+		syso("File Name received is : " + fileName);
+		
 		ResponseBuilder response = Response.ok((Object) file);
 		response.header("Content-Disposition",
-			"attachment; filename=\"file_from_server.log\"");
+			"attachment; filename=\"" + fileName + "\"");
+		syso("The response is : " + response.toString());
 		return response.build();
 
 	}
@@ -113,6 +118,9 @@ public class JerseyService
 		}
 	}
 	
+	private void syso(String message){
+		syso(message,true);
+	}
 	
 	@POST
 	@Path("/base")
