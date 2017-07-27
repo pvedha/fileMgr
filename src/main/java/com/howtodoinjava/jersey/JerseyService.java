@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.jvnet.hk2.annotations.Optional;
 
 @Path("/file")
 public class JerseyService 
@@ -66,43 +67,73 @@ public class JerseyService
 	@GET
 	@Path("/get")
 	@Produces("text/plain")
-	public Response getFile(@QueryParam("filePath") String filePath, @QueryParam("fileName") String fileName) {
+	public Response getFile(@QueryParam("filePath") String filePath, 
+			@QueryParam("fileName") String fileName,
+			@QueryParam("debug") @Optional boolean debug) {
 
 		//String FILEPATH = "c:\\temp\\somefile.txt";
 		File file = new File(filePath);
 
-		syso("File Path received is : " + filePath);
+		syso("File Path received is : " + filePath, debug);
 		
-		syso("File Name received is : " + fileName);
+		syso("File Name received is : " + fileName, debug);
 		
 		ResponseBuilder response = Response.ok((Object) file);
 		response.header("Content-Disposition",
 			"attachment; filename=\"" + fileName + "\"");
-		syso("The response is : " + response.toString());
+		syso("The response is : " + response.toString(), debug);
 		return response.build();
 
 	}
 	
 	@GET
-	@Path("/get2")
-	@Produces("text/plain")
-	public Response getFile2() {
+	@Path("/getMP")
+	@Produces(MediaType.MULTIPART_FORM_DATA)	
+	public Response getFileMultiPart(@QueryParam("filePath") String filePath, 
+			@QueryParam("fileName") String fileName,
+			@QueryParam("debug") @Optional boolean debug) {
 
-		String FILEPATH = "c:\\temp\\doc.doc";
-		File file = new File(FILEPATH);
+		File file = new File(filePath);
 
+		syso("File Path received is : " + filePath, debug);
+		
+		syso("File Name received is : " + fileName, debug);
+		
 		ResponseBuilder response = Response.ok((Object) file);
 		response.header("Content-Disposition",
-			"attachment; filename=\"ACompleteDoc.doc\"");
+			"attachment; filename=\"" + fileName + "\"");
+		syso("The response is : " + response.toString(), debug);
 		return response.build();
 
 	}
+	
 	@GET
-	@Path("/getAll")
+	@Path("/getAOS")
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)	
+	public Response getFileAOS(@QueryParam("filePath") String filePath, 
+			@QueryParam("fileName") String fileName,
+			@QueryParam("debug") @Optional boolean debug) {
+
+		File file = new File(filePath);
+
+		syso("File Path received is : " + filePath, debug);
+		
+		syso("File Name received is : " + fileName, debug);
+		
+		ResponseBuilder response = Response.ok((Object) file);
+		response.header("Content-Disposition",
+			"attachment; filename=\"" + fileName + "\"");
+		syso("The response is : " + response.toString(), debug);
+		return response.build();
+
+	}
+	
+	@GET
+	@Path("/getSample")
 	@Produces("text/plain")
 	public Response getDocFile() {
 
-		String FILEPATH = "c:\\temp\\Application.java";
+		String FILEPATH = "c:\\temp\\sample.txt";
 		File file = new File(FILEPATH);
 
 		ResponseBuilder response = Response.ok((Object) file);
